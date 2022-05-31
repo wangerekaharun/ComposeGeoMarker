@@ -1,3 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="raywenderlich" />
+  <settings default="raywenderlich">
+    <module2copyright>
+      <element module="All" copyright="raywenderlich" />
+    </module2copyright>
+  </settings>
 </component>
