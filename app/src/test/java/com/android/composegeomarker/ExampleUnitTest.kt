@@ -32,7 +32,7 @@
  * THE SOFTWARE.
  */
 
-package com.Ccomposegeomarker
+package com.android.composegeomarker
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
