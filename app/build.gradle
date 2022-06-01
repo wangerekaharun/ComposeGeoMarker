@@ -1,16 +1,20 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+  id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+  id  'kotlin-android'
+  id  'com.android.application'
+}
 
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
 
   defaultConfig {
-    applicationId "com.Ccomposegeomarker"
+    applicationId "com.android.composegeomarker"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    manifestPlaceholders = [MAPS_API_KEY: ""]
     vectorDrawables {
       useSupportLibrary true
     }
@@ -68,7 +72,9 @@ dependencies {
   debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
   debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
-  // TUTORIAL DEPENDENCIES HERE
+  // Compose Map
+  implementation  "com.google.maps.android:maps-compose:2.1.1"
+  implementation 'com.google.android.gms:play-services-maps:18.0.2'
 
 
 }
