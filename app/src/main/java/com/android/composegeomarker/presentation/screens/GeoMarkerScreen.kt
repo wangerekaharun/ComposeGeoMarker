@@ -37,6 +37,7 @@
 package com.android.composegeomarker.presentation.screens
 
 import android.Manifest
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
@@ -46,12 +47,11 @@ import androidx.compose.ui.res.stringResource
 import com.android.composegeomarker.R
 import com.android.composegeomarker.permissions.PermissionAction
 import com.android.composegeomarker.permissions.PermissionDialog
+import com.android.composegeomarker.presentation.composables.CustomInfoWindow
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.compose.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -84,25 +84,43 @@ fun GeoMarkerScreen(
   }
 
   if (showMap) {
-    MapComposable()
+    MapComposable(context)
   }
 
 }
 
 @Composable
-fun MapComposable() {
+fun MapComposable(context: Context) {
   val singapore = LatLng(1.35, 103.87)
   val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(singapore, 16f)
   }
+  val infoWindowState = rememberMarkerState(position = singapore)
+  val mapProperties by remember {
+    mutableStateOf(
+        MapProperties(
+            isMyLocationEnabled = true,
+            mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
+        )
+    )
+  }
   GoogleMap(
       modifier = Modifier.fillMaxSize(),
-      cameraPositionState = cameraPositionState
+      cameraPositionState = cameraPositionState,
+      properties = mapProperties
   ) {
     Marker(
         state = MarkerState(position = singapore),
-        title = "Singapore",
-        snippet = "Marker in Singapore"
     )
+
+    MarkerInfoWindow(
+        state = infoWindowState,
+        title = "My location",
+        snippet = "Location custom info window",
+        content = {
+          CustomInfoWindow(title = it.title, description = it.snippet)
+        }
+    )
+
   }
 }
