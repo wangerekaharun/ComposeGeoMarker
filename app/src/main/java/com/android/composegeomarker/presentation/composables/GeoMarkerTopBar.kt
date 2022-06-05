@@ -34,13 +34,30 @@
  *
  */
 
-package com.android.composegeomarker.ui.theme
+package com.android.composegeomarker.presentation.composables
 
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.android.composegeomarker.presentation.theme.ComposeGeoMarkerTheme
 
-val Shapes = androidx.compose.material3.Shapes(
-    small = RoundedCornerShape(4.dp),
-    medium = RoundedCornerShape(4.dp),
-    large = RoundedCornerShape(0.dp)
-)
+@Composable
+fun GeoMarkerTopBar() {
+  SmallTopAppBar(
+      title = { Text("Geo Marker") },
+      modifier = Modifier
+          .background(color = MaterialTheme.colorScheme.inversePrimary)
+  )
+}
+
+@Preview
+@Composable
+fun TopBarPreview() {
+  ComposeGeoMarkerTheme() {
+    GeoMarkerTopBar()
+  }
+}

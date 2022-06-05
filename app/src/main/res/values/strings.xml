@@ -1,4 +1,6 @@
 <resources>
   <string name="app_name">ComposeGeoMarker</string>
   <string name="title_activity_main">MainActivity</string>
+  <string name="permission_location_rationale">This app requires the location permission to be 
+    granted.</string>
 </resources>

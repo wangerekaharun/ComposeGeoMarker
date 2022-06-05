@@ -34,7 +34,7 @@
  *
  */
 
-package com.android.composegeomarker.ui.theme
+package com.android.composegeomarker.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

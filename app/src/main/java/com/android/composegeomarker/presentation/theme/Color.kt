@@ -34,7 +34,7 @@
  *
  */
 
-package com.android.composegeomarker.ui.theme
+package com.android.composegeomarker.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

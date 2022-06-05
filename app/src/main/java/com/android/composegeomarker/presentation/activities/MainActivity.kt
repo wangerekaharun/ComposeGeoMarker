@@ -34,63 +34,50 @@
  *
  */
 
-package com.android.composegeomarker
+package com.android.composegeomarker.presentation.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.android.composegeomarker.ui.theme.ComposeGeoMarkerTheme
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.android.composegeomarker.presentation.composables.GeoMarkerTopBar
+import com.android.composegeomarker.presentation.screens.GeoMarkerScreen
+import com.android.composegeomarker.presentation.theme.ComposeGeoMarkerTheme
 
+@ExperimentalMaterial3Api
 class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
       ComposeGeoMarkerTheme {
-        // A surface container using the 'background' color from the theme
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-          val singapore = LatLng(1.35, 103.87)
-          val cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(singapore, 10f)
-          }
-          GoogleMap(
-              modifier = Modifier.fillMaxSize(),
-              cameraPositionState = cameraPositionState
-          ) {
-            Marker(
-                state = MarkerState(position = singapore),
-                title = "Singapore",
-                snippet = "Marker in Singapore"
-            )
-          }
-        }
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
+        Scaffold(
+            topBar = { GeoMarkerTopBar() },
+            content = { innerPadding ->
+              Box(modifier = Modifier.padding(innerPadding)) {
+                GeoMarkerScreen(snackbarHostState, scope)
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    modifier = Modifier
+                        .wrapContentHeight(Alignment.Bottom)
+                        .align(Alignment.BottomCenter)
+                )
+              }
+            }
+        )
       }
     }
-  }
-}
-
-@Composable
-fun Greeting(name: String) {
-  Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-  ComposeGeoMarkerTheme {
-    Greeting("Android")
   }
 }
