@@ -34,57 +34,60 @@
  *
  */
 
-package com.android.composegeomarker.presentation.activities
+package com.android.composegeomarker.presentation.composables
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.compose.rememberNavController
-import com.android.composegeomarker.presentation.GeoMarkerViewModel
-import com.android.composegeomarker.presentation.navigation.AppNavigation
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.android.composegeomarker.presentation.theme.ComposeGeoMarkerTheme
-import com.android.composegeomarker.utils.locationFlow
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.launch
 
-@ExperimentalMaterial3Api
-class MainActivity : ComponentActivity() {
+@Composable
+fun SaveGeoPoint(latLng: LatLng) {
+  Column(
+      modifier = Modifier
+          .fillMaxWidth()
+          .background(MaterialTheme.colorScheme.primary)
+  ) {
+    Text(
+        "${latLng.latitude}, ${latLng.latitude}",
+        color = Color.White,
+        modifier = Modifier
+            .padding(10.dp)
+    )
 
-  private val fusedLocationClient: FusedLocationProviderClient by lazy {
-    LocationServices.getFusedLocationProviderClient(this)
+    TextButton(
+        onClick = {},
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+      Text(
+          modifier = Modifier
+              .padding(top = 16.dp)
+              .fillMaxWidth(),
+          text = "Save Point",
+          color = Color.White,
+          textAlign = TextAlign.End
+      )
+    }
+
   }
+}
 
-  private val geoMarkerViewModel: GeoMarkerViewModel by viewModels()
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    lifecycleScope.launch {
-      lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-        fusedLocationClient.locationFlow().collect {
-          geoMarkerViewModel.setCurrentLatLng(LatLng(it.latitude, it.longitude))
-        }
-      }
-    }
-    setContent {
-      val snackbarHostState = remember { SnackbarHostState() }
-      val navController = rememberNavController()
-      ComposeGeoMarkerTheme {
-        AppNavigation(
-            navController = navController,
-            snackbarHostState = snackbarHostState,
-            geoMarkerViewModel = geoMarkerViewModel
-        )
-      }
-    }
+@Composable
+@Preview
+fun SaveGeoPointPreview() {
+  ComposeGeoMarkerTheme {
+    SaveGeoPoint(LatLng(0.0, 0.0))
   }
 }

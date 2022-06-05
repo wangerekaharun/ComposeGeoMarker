@@ -34,57 +34,26 @@
  *
  */
 
-package com.android.composegeomarker.presentation.activities
+package com.android.composegeomarker.presentation
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.compose.rememberNavController
-import com.android.composegeomarker.presentation.GeoMarkerViewModel
-import com.android.composegeomarker.presentation.navigation.AppNavigation
-import com.android.composegeomarker.presentation.theme.ComposeGeoMarkerTheme
-import com.android.composegeomarker.utils.locationFlow
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-@ExperimentalMaterial3Api
-class MainActivity : ComponentActivity() {
+class GeoMarkerViewModel : ViewModel() {
 
-  private val fusedLocationClient: FusedLocationProviderClient by lazy {
-    LocationServices.getFusedLocationProviderClient(this)
+  private val _currentLatLng = MutableStateFlow(LatLng(0.0, 0.0))
+  val currentLatLng: StateFlow<LatLng> get() = _currentLatLng
+
+  private val _areaPoints = MutableStateFlow(emptyList<LatLng>())
+  val areaPoints: StateFlow<List<LatLng>> get() = _areaPoints
+
+
+  fun setCurrentLatLng(latLng: LatLng) {
+    _currentLatLng.value = latLng
   }
 
-  private val geoMarkerViewModel: GeoMarkerViewModel by viewModels()
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
 
-    lifecycleScope.launch {
-      lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-        fusedLocationClient.locationFlow().collect {
-          geoMarkerViewModel.setCurrentLatLng(LatLng(it.latitude, it.longitude))
-        }
-      }
-    }
-    setContent {
-      val snackbarHostState = remember { SnackbarHostState() }
-      val navController = rememberNavController()
-      ComposeGeoMarkerTheme {
-        AppNavigation(
-            navController = navController,
-            snackbarHostState = snackbarHostState,
-            geoMarkerViewModel = geoMarkerViewModel
-        )
-      }
-    }
-  }
 }

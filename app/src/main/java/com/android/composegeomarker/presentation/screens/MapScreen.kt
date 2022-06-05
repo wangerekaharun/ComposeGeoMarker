@@ -37,72 +37,55 @@
 package com.android.composegeomarker.presentation.screens
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import com.android.composegeomarker.R
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.android.composegeomarker.presentation.GeoMarkerViewModel
 import com.android.composegeomarker.presentation.composables.GeoMarkerTopBar
-import com.android.composegeomarker.presentation.composables.SaveGeoPoint
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.android.composegeomarker.presentation.navigation.Screens
 
 @ExperimentalMaterial3Api
 @Composable
-fun GeoMarkerScreen(
-    geoMarkerViewModel: GeoMarkerViewModel
+fun MapsScreen(
+    snackbarHostState: SnackbarHostState,
+    geoMarkerViewModel: GeoMarkerViewModel,
+    navController: NavController
 ) {
-  val context = LocalContext.current
-  val currentLocation by geoMarkerViewModel.currentLatLng.collectAsState()
-
-  val cameraPositionState = rememberCameraPositionState {
-    position = CameraPosition.fromLatLngZoom(LatLng(37.4166, -122.3298), 16f)
-  }
-
-  var showSavePoint by remember {
-    mutableStateOf(false)
-  }
-
-  var clickedLocation by remember {
-    mutableStateOf(LatLng(0.0, 0.0))
-  }
-  val mapProperties by remember {
-    mutableStateOf(
-        MapProperties(
-            isMyLocationEnabled = true,
-            mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
-        )
-    )
-  }
-
   Scaffold(
       topBar = { GeoMarkerTopBar() },
       content = { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-          GoogleMap(
-              modifier = Modifier.fillMaxSize(),
-              cameraPositionState = cameraPositionState,
-              properties = mapProperties,
-              onMapClick = {
-                showSavePoint = true
-                clickedLocation = it
-              }
+          MapScreenContent(snackbarHostState, geoMarkerViewModel)
+          SnackbarHost(
+              hostState = snackbarHostState,
+              modifier = Modifier
+                  .wrapContentHeight(Alignment.Bottom)
+                  .align(Alignment.BottomCenter)
           )
-
-          if (showSavePoint) {
-            SaveGeoPoint(latLng = LatLng(37.4166, -122.3298))
-          }
         }
+      },
+      floatingActionButton = {
+        ExtendedFloatingActionButton(
+            modifier = Modifier
+                .padding(16.dp),
+            onClick = {
+              navController.navigate(Screens.GeoMarkerScreen.route)
+            },
+            icon = {
+              Icon(
+                  Icons.Filled.Add,
+                  contentDescription = "Create"
+              )
+            },
+            text = { Text("Mark Area") }
+        )
       }
   )
-
-
 }
