@@ -38,7 +38,14 @@ package com.android.composegeomarker.presentation.screens
 
 import android.Manifest
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -99,6 +106,7 @@ fun MapComposable(context: Context, location: LatLng) {
     position = CameraPosition.fromLatLngZoom(location, 16f)
   }
   val infoWindowState = rememberMarkerState(position = location)
+  var isMapLoaded by remember { mutableStateOf(false) }
 
   val mapUiSettings by remember {
     mutableStateOf(
@@ -115,11 +123,33 @@ fun MapComposable(context: Context, location: LatLng) {
         )
     )
   }
+
+  if (!isMapLoaded) {
+    if (!isMapLoaded) {
+      AnimatedVisibility(
+          modifier = Modifier
+              .fillMaxSize(),
+          visible = !isMapLoaded,
+          enter = EnterTransition.None,
+          exit = fadeOut()
+      ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .wrapContentSize()
+        )
+      }
+    }
+  }
+
   GoogleMap(
       modifier = Modifier.fillMaxSize(),
       cameraPositionState = cameraPositionState,
       properties = mapProperties,
       uiSettings = mapUiSettings,
+      onMapLoaded = {
+        isMapLoaded = true
+      }
   ) {
     Marker(
         state = MarkerState(position = location),
