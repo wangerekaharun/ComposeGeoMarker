@@ -54,6 +54,10 @@ class GeoMarkerViewModel : ViewModel() {
     _currentLatLng.value = latLng
   }
 
+  private fun addFieldPoints() {
+    _areaPoints
+  }
+
 
 
 }
