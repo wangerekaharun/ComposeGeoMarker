@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.android.composegeomarker.R
+import com.android.composegeomarker.presentation.GeoMarkerViewModel
 import com.android.composegeomarker.presentation.composables.GeoMarkerTopBar
 import com.android.composegeomarker.presentation.composables.SaveGeoPoint
 import com.google.android.gms.maps.model.CameraPosition
@@ -56,15 +57,19 @@ import com.google.maps.android.compose.*
 
 @ExperimentalMaterial3Api
 @Composable
-fun GeoMarkerScreen() {
+fun GeoMarkerScreen(
+    geoMarkerViewModel: GeoMarkerViewModel
+) {
   val context = LocalContext.current
   val areaPoints = mutableListOf<LatLng>()
   var drawPolygon by remember {
     mutableStateOf(false)
   }
 
+  val currentLocation by geoMarkerViewModel.currentLatLng.collectAsState()
+
   val cameraPositionState = rememberCameraPositionState {
-    position = CameraPosition.fromLatLngZoom(LatLng(37.4166, -122.3298), 16f)
+    position = CameraPosition.fromLatLngZoom(currentLocation, 16f)
   }
 
   var showSavePoint by remember {
@@ -118,7 +123,8 @@ fun GeoMarkerScreen() {
                 },
                 modifier = Modifier
                     .padding(start = 10.dp, end = 10.dp, bottom = 16.dp)
-                    .align(Alignment.BottomCenter)
+                    .align(Alignment.BottomCenter),
+                enabled = areaPoints.isNotEmpty() && areaPoints.size > 2
             ) {
               Icon(
                   Icons.Filled.Check,

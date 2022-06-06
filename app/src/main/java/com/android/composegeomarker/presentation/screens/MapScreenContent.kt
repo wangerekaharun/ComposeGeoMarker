@@ -87,7 +87,7 @@ fun MapScreenContent(
       }
     }
   }
-  if (showMap) {
+  if (showMap && currentLocation.latitude > 0.00) {
     MapComposable(context, currentLocation)
   }
 
@@ -133,7 +133,7 @@ fun MapComposable(context: Context, location: LatLng) {
           CustomInfoWindow(title = it.title, description = it.snippet)
         }
     )
-    
+
     Circle(
         center = location,
         fillColor = Color.Green,
