@@ -37,31 +37,16 @@
 package com.android.composegeomarker.presentation.screens
 
 import android.Manifest
-import android.content.Context
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.android.composegeomarker.R
 import com.android.composegeomarker.permissions.PermissionAction
 import com.android.composegeomarker.permissions.PermissionDialog
 import com.android.composegeomarker.presentation.GeoMarkerViewModel
-import com.android.composegeomarker.presentation.composables.CustomInfoWindow
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.maps.android.compose.*
+import com.android.composegeomarker.presentation.composables.MapView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -95,81 +80,7 @@ fun MapScreenContent(
     }
   }
   if (showMap && currentLocation.latitude > 0.00) {
-    MapComposable(context, currentLocation)
+    MapView(context, currentLocation)
   }
 
-}
-
-@Composable
-fun MapComposable(context: Context, location: LatLng) {
-  val cameraPositionState = rememberCameraPositionState {
-    position = CameraPosition.fromLatLngZoom(location, 16f)
-  }
-  val infoWindowState = rememberMarkerState(position = location)
-  var isMapLoaded by remember { mutableStateOf(false) }
-
-  val mapUiSettings by remember {
-    mutableStateOf(
-        MapUiSettings(
-            myLocationButtonEnabled = true,
-            zoomControlsEnabled = false
-        )
-    )
-  }
-  val mapProperties by remember {
-    mutableStateOf(
-        MapProperties(
-            mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
-        )
-    )
-  }
-
-  if (!isMapLoaded) {
-    if (!isMapLoaded) {
-      AnimatedVisibility(
-          modifier = Modifier
-              .fillMaxSize(),
-          visible = !isMapLoaded,
-          enter = EnterTransition.None,
-          exit = fadeOut()
-      ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .wrapContentSize()
-        )
-      }
-    }
-  }
-
-  GoogleMap(
-      modifier = Modifier.fillMaxSize(),
-      cameraPositionState = cameraPositionState,
-      properties = mapProperties,
-      uiSettings = mapUiSettings,
-      onMapLoaded = {
-        isMapLoaded = true
-      }
-  ) {
-    Marker(
-        state = MarkerState(position = location),
-    )
-
-    MarkerInfoWindow(
-        state = infoWindowState,
-        title = "My location",
-        snippet = "Location custom info window",
-        content = {
-          CustomInfoWindow(title = it.title, description = it.snippet)
-        }
-    )
-
-    Circle(
-        center = location,
-        fillColor = Color.Green,
-        strokeColor = Color.Green,
-        radius = 105.00
-    )
-
-  }
 }
