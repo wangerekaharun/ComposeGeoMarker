@@ -2,11 +2,11 @@
 buildscript {
 
   ext {
-    kotlin_version = '1.6.21'
+    kotlin_version = '1.7.0'
     compileSdkVersion = 32
     targetSdkVersion = compileSdkVersion
     minSdkVersion = 21
-    compose_version = '1.2.0-beta02'
+    compose_version = '1.2.0-beta03'
   }
 
   repositories {
