@@ -39,6 +39,7 @@ package com.android.composegeomarker.presentation.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -61,7 +62,7 @@ fun GeoMarkerScreen(
     geoMarkerViewModel: GeoMarkerViewModel
 ) {
   val context = LocalContext.current
-  val areaPoints = mutableListOf<LatLng>()
+  var areaPoints = mutableListOf<LatLng>()
   var drawPolygon by remember {
     mutableStateOf(false)
   }
@@ -96,11 +97,13 @@ fun GeoMarkerScreen(
               cameraPositionState = cameraPositionState,
               properties = mapProperties,
               onMapClick = {
-                showSavePoint = true
-                clickedLocation = it
+                if (!drawPolygon) {
+                  showSavePoint = true
+                  clickedLocation = it
+                }
               }
           ) {
-            if (drawPolygon) {
+            if (drawPolygon && areaPoints.isNotEmpty()) {
               areaPoints.forEach {
                 Marker(state = MarkerState(position = it))
               }
@@ -116,26 +119,29 @@ fun GeoMarkerScreen(
             }
           }
 
-          if (!drawPolygon) {
-            Button(
-                onClick = {
+          Button(
+              onClick = {
+                if (drawPolygon) {
+                  drawPolygon = false
+                  areaPoints = mutableListOf()
+                } else {
                   drawPolygon = true
-                },
-                modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp, bottom = 16.dp)
-                    .align(Alignment.BottomCenter),
-                enabled = areaPoints.isNotEmpty() && areaPoints.size > 2
-            ) {
-              Icon(
-                  Icons.Filled.Check,
-                  contentDescription = "Complete",
-                  modifier = Modifier.size(ButtonDefaults.IconSize)
-              )
-              Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-              Text(text = "Complete")
-            }
-
+                }
+              },
+              modifier = Modifier
+                  .padding(start = 10.dp, end = 10.dp, bottom = 16.dp)
+                  .align(Alignment.BottomCenter),
+              enabled = areaPoints.isNotEmpty() && areaPoints.size > 2
+          ) {
+            Icon(
+                imageVector = if (drawPolygon) Icons.Filled.Refresh else Icons.Filled.Check,
+                contentDescription = "Complete",
+                modifier = Modifier.size(ButtonDefaults.IconSize)
+            )
+            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+            Text(text = if (drawPolygon) "Retry" else "Complete")
           }
+
           if (showSavePoint) {
             SaveGeoPoint(latLng = clickedLocation) {
               showSavePoint = it.hideSavePointUi
