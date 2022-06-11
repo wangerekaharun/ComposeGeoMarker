@@ -39,10 +39,7 @@ package com.android.composegeomarker.utils
 import android.annotation.SuppressLint
 import android.os.Looper
 import android.util.Log
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
@@ -72,7 +69,7 @@ fun createLocationRequest(): LocationRequest {
   return LocationRequest.create().apply {
     interval = 20000
     fastestInterval = 10000
-    priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    priority = Priority.PRIORITY_HIGH_ACCURACY
   }
 
 }

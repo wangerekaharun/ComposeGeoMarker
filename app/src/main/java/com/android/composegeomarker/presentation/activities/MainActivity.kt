@@ -71,7 +71,9 @@ class MainActivity : ComponentActivity() {
     lifecycleScope.launch {
       lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
         fusedLocationClient.locationFlow().collect {
-          geoMarkerViewModel.setCurrentLatLng(LatLng(it.latitude, it.longitude))
+          it?.let { location ->
+            geoMarkerViewModel.setCurrentLatLng(LatLng(location.latitude, location.longitude))
+          }
         }
       }
     }
