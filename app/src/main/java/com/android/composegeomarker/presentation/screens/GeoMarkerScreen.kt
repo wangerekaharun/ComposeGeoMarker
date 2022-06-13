@@ -46,6 +46,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.android.composegeomarker.R
 import com.android.composegeomarker.presentation.GeoMarkerViewModel
@@ -146,6 +148,17 @@ fun GeoMarkerScreen(
             SaveGeoPoint(latLng = clickedLocation) {
               showSavePoint = it.hideSavePointUi
               areaPoints.add(it.point)
+            }
+          } else {
+            if (areaPoints.isEmpty() && areaPoints.size < 2) {
+              Text(
+                  modifier = Modifier
+                      .fillMaxWidth(),
+                  color = Color.Blue,
+                  text = "Click any point on the map to mark it.",
+                  textAlign = TextAlign.Center,
+                  fontWeight = FontWeight.Bold
+              )
             }
           }
         }
