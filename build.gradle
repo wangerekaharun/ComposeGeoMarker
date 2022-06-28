@@ -6,7 +6,7 @@ buildscript {
     compileSdkVersion = 32
     targetSdkVersion = compileSdkVersion
     minSdkVersion = 21
-    compose_version = '1.2.0-beta03'
+    compose_version = '1.2.0-rc02'
   }
 
   repositories {

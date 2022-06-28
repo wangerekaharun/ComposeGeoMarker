@@ -55,7 +55,7 @@ dependencies {
   implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
   implementation "androidx.compose.ui:ui:$compose_version"
   implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
-  implementation "androidx.navigation:navigation-compose:2.5.0-rc01"
+  implementation "androidx.navigation:navigation-compose:2.5.0-rc02"
   implementation "androidx.compose.material3:material3:1.0.0-alpha13"
   implementation "androidx.compose.material3:material3-window-size-class:1.0.0-alpha13"
   implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
@@ -74,7 +74,7 @@ dependencies {
   debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
   // Compose Map
-  implementation  "com.google.maps.android:maps-compose:2.1.1"
+  implementation  "com.google.maps.android:maps-compose:2.4.0"
   implementation 'com.google.android.gms:play-services-maps:18.0.2'
   implementation "com.google.android.gms:play-services-location:20.0.0"
 
@@ -83,8 +83,8 @@ dependencies {
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
 
   // Lifecycle
-  implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc01"
-  implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0-rc01'
+  implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-rc02"
+  implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0-rc02'
 
 
 }
