@@ -36,51 +36,14 @@
 
 package com.android.composegeomarker.presentation.screens
 
-import android.Manifest
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import com.android.composegeomarker.R
-import com.android.composegeomarker.permissions.PermissionAction
-import com.android.composegeomarker.permissions.PermissionDialog
+import androidx.compose.runtime.Composable
 import com.android.composegeomarker.presentation.GeoMarkerViewModel
-import com.android.composegeomarker.presentation.composables.MapView
-import kotlinx.coroutines.launch
 
 @Composable
 fun MapScreenContent(
     snackbarHostState: SnackbarHostState,
     geoMarkerViewModel: GeoMarkerViewModel
 ) {
-  val scope = rememberCoroutineScope()
-  val context = LocalContext.current
-  var showMap by rememberSaveable {
-    mutableStateOf(false)
-  }
-
-  val currentLocation by geoMarkerViewModel.currentLatLng.collectAsState()
-
-  PermissionDialog(
-      context = context,
-      permission = Manifest.permission.ACCESS_FINE_LOCATION,
-      permissionRationale = stringResource(id = R.string.permission_location_rationale),
-      snackbarHostState = snackbarHostState) { permissionAction ->
-    when (permissionAction) {
-      is PermissionAction.PermissionDenied -> {
-        showMap = false
-      }
-      is PermissionAction.PermissionGranted -> {
-        showMap = true
-        scope.launch {
-          snackbarHostState.showSnackbar("Location permission granted!")
-        }
-      }
-    }
-  }
-  if (showMap && currentLocation.latitude > 0.00) {
-    MapView(context, currentLocation)
-  }
-
+  // TODO Add Permissions
 }
