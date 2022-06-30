@@ -36,27 +36,26 @@
 
 package com.android.composegeomarker.presentation.screens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.android.composegeomarker.R
 import com.android.composegeomarker.presentation.GeoMarkerViewModel
+import com.android.composegeomarker.presentation.composables.GeoMarkerButton
 import com.android.composegeomarker.presentation.composables.GeoMarkerTopBar
-import com.android.composegeomarker.presentation.composables.SaveGeoPoint
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.maps.android.compose.*
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @ExperimentalMaterial3Api
 @Composable
@@ -99,66 +98,23 @@ fun GeoMarkerScreen(
               cameraPositionState = cameraPositionState,
               properties = mapProperties,
               onMapClick = {
-                if (!drawPolygon) {
-                  showSavePoint = true
-                  clickedLocation = it
-                }
+                // TODO Add click listener
               }
           ) {
-            if (drawPolygon && areaPoints.isNotEmpty()) {
-              areaPoints.forEach {
-                Marker(state = MarkerState(position = it))
-              }
-              Polygon(
-                  points = areaPoints,
-                  fillColor = Color.Blue,
-                  strokeColor = Color.Blue
-              )
-            }
-
-            if (showSavePoint) {
-              Marker(state = MarkerState(position = clickedLocation))
-            }
+            // TODO Add Polygon
           }
 
-          Button(
-              onClick = {
-                if (drawPolygon) {
-                  drawPolygon = false
-                  areaPoints = mutableListOf()
-                } else {
-                  drawPolygon = true
-                }
-              },
+          // TODO Save Point UI
+
+          GeoMarkerButton(
               modifier = Modifier
                   .padding(start = 10.dp, end = 10.dp, bottom = 16.dp)
                   .align(Alignment.BottomCenter),
-              enabled = areaPoints.isNotEmpty() && areaPoints.size > 2
-          ) {
-            Icon(
-                imageVector = if (drawPolygon) Icons.Filled.Refresh else Icons.Filled.Check,
-                contentDescription = "Complete",
-                modifier = Modifier.size(ButtonDefaults.IconSize)
-            )
-            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-            Text(text = if (drawPolygon) "Retry" else "Complete")
-          }
-
-          if (showSavePoint) {
-            SaveGeoPoint(latLng = clickedLocation) {
-              showSavePoint = it.hideSavePointUi
-              areaPoints.add(it.point)
-            }
-          } else {
-            if (areaPoints.isEmpty() && areaPoints.size < 2) {
-              Text(
-                  modifier = Modifier
-                      .fillMaxWidth(),
-                  color = Color.Blue,
-                  text = "Click any point on the map to mark it.",
-                  textAlign = TextAlign.Center,
-                  fontWeight = FontWeight.Bold
-              )
+              drawPolygon = drawPolygon,
+              areaPoints = areaPoints) { drawPolygonCallback ->
+            drawPolygon = drawPolygonCallback
+            if (drawPolygonCallback) {
+              areaPoints = mutableListOf()
             }
           }
         }
