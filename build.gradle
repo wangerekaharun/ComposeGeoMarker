@@ -7,6 +7,7 @@ buildscript {
     targetSdkVersion = compileSdkVersion
     minSdkVersion = 21
     compose_version = '1.2.0-rc02'
+    androidx_test_version = '1.4.0'
   }
 
   repositories {
