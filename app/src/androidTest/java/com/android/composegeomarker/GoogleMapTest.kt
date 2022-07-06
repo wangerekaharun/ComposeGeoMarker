@@ -34,20 +34,66 @@
  *
  */
 
-package com.android.composegeomarker.presentation
+package com.android.composegeomarker
 
-import androidx.lifecycle.ViewModel
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.test.junit4.createComposeRule
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.GoogleMap
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertTrue
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
-class GeoMarkerViewModel : ViewModel() {
+class GoogleMapTest {
 
-  private val _currentLatLng = MutableStateFlow(LatLng(0.0, 0.0))
-  val currentLatLng: StateFlow<LatLng> get() = _currentLatLng
+  @get:Rule
+  val composeTestRule = createComposeRule()
 
+  private lateinit var cameraPositionState: CameraPositionState
+  private val singapore = LatLng(1.34999984688566, 103.86999987065792)
+  private val cameraZoom = 16f
 
-  fun setCurrentLatLng(latLng: LatLng) {
-    _currentLatLng.value = latLng
+  @Before
+  fun setup() {
+    cameraPositionState = CameraPositionState(
+        position = CameraPosition.fromLatLngZoom(
+            singapore,
+            cameraZoom
+        )
+    )
+  }
+
+  private fun loadMap() {
+    val countDownLatch = CountDownLatch(1)
+    composeTestRule.setContent {
+      GoogleMap(
+          modifier = Modifier.fillMaxSize(),
+          cameraPositionState = cameraPositionState,
+          onMapLoaded = {
+            countDownLatch.countDown()
+          }
+      )
+    }
+    val mapLoaded = countDownLatch.await(30, TimeUnit.SECONDS)
+    assertTrue("Map loaded", mapLoaded)
+  }
+
+  @Test
+  fun testCameraPosition() {
+    loadMap()
+    assertEquals(singapore, cameraPositionState.position.target)
+  }
+
+  @Test
+  fun testZoomLevel() {
+    loadMap()
+    assertEquals(cameraZoom, cameraPositionState.position.zoom)
   }
 }

@@ -45,22 +45,19 @@ import androidx.compose.ui.res.stringResource
 import com.android.composegeomarker.R
 import com.android.composegeomarker.permissions.PermissionAction
 import com.android.composegeomarker.permissions.PermissionDialog
-import com.android.composegeomarker.presentation.GeoMarkerViewModel
 import com.android.composegeomarker.presentation.composables.MapView
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
 @Composable
 fun MapScreenContent(
-    snackbarHostState: SnackbarHostState,
-    geoMarkerViewModel: GeoMarkerViewModel
+    snackbarHostState: SnackbarHostState
 ) {
   val scope = rememberCoroutineScope()
   val context = LocalContext.current
   var showMap by rememberSaveable {
     mutableStateOf(false)
   }
-
-  val currentLocation by geoMarkerViewModel.currentLatLng.collectAsState()
 
   PermissionDialog(
       context = context,
@@ -79,6 +76,8 @@ fun MapScreenContent(
       }
     }
   }
+  val currentLocation = LatLng(1.35, 103.87)
+
   if (showMap && currentLocation.latitude > 0.00) {
     MapView(context, currentLocation)
   }
