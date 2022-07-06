@@ -38,10 +38,7 @@ package com.android.composegeomarker
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -95,25 +92,9 @@ class GoogleMapTest {
   }
 
   @Test
-  fun testZoomInControl() {
+  fun testZoomLevel() {
     loadMap()
-
-
-    composeTestRule.onNodeWithText("+")
-        .assertIsDisplayed()
-        .performClick()
-
-    composeTestRule.waitUntil(1000) {
-      cameraPositionState.isMoving
-    }
-    composeTestRule.waitUntil(3000) {
-      !cameraPositionState.isMoving
-    }
-    assertEquals(
-        cameraZoom + 1f,
-        cameraPositionState.position.zoom
-    )
-
+    assertEquals(cameraZoom, cameraPositionState.position.zoom)
   }
 
 
