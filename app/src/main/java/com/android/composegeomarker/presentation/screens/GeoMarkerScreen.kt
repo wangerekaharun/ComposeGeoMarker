@@ -46,15 +46,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.android.composegeomarker.R
 import com.android.composegeomarker.presentation.GeoMarkerViewModel
 import com.android.composegeomarker.presentation.composables.GeoMarkerButton
 import com.android.composegeomarker.presentation.composables.GeoMarkerTopBar
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.rememberCameraPositionState
 
 @ExperimentalMaterial3Api
@@ -81,13 +78,6 @@ fun GeoMarkerScreen(
   var clickedLocation by remember {
     mutableStateOf(LatLng(0.0, 0.0))
   }
-  val mapProperties by remember {
-    mutableStateOf(
-        MapProperties(
-            mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
-        )
-    )
-  }
 
   Scaffold(
       topBar = { GeoMarkerTopBar() },
@@ -96,7 +86,6 @@ fun GeoMarkerScreen(
           GoogleMap(
               modifier = Modifier.fillMaxSize(),
               cameraPositionState = cameraPositionState,
-              properties = mapProperties,
               onMapClick = {
                 // TODO Add click listener
               }
@@ -111,9 +100,10 @@ fun GeoMarkerScreen(
                   .padding(start = 10.dp, end = 10.dp, bottom = 16.dp)
                   .align(Alignment.BottomCenter),
               drawPolygon = drawPolygon,
-              areaPoints = areaPoints) { drawPolygonCallback ->
+              areaPoints = areaPoints
+          ) { drawPolygonCallback ->
             drawPolygon = drawPolygonCallback
-            if (drawPolygonCallback) {
+            if (!drawPolygonCallback) {
               areaPoints = mutableListOf()
             }
           }
