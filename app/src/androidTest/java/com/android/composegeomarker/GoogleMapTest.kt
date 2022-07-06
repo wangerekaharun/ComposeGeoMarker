@@ -36,20 +36,12 @@
 
 package com.android.composegeomarker
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.GoogleMap
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 class GoogleMapTest {
 
@@ -69,33 +61,4 @@ class GoogleMapTest {
         )
     )
   }
-
-  private fun loadMap() {
-    val countDownLatch = CountDownLatch(1)
-    composeTestRule.setContent {
-      GoogleMap(
-          modifier = Modifier.fillMaxSize(),
-          cameraPositionState = cameraPositionState,
-          onMapLoaded = {
-            countDownLatch.countDown()
-          }
-      )
-    }
-    val mapLoaded = countDownLatch.await(30, TimeUnit.SECONDS)
-    assertTrue("Map loaded", mapLoaded)
-  }
-
-  @Test
-  fun testCameraPosition() {
-    loadMap()
-    assertEquals(singapore, cameraPositionState.position.target)
-  }
-
-  @Test
-  fun testZoomLevel() {
-    loadMap()
-    assertEquals(cameraZoom, cameraPositionState.position.zoom)
-  }
-
-
 }
