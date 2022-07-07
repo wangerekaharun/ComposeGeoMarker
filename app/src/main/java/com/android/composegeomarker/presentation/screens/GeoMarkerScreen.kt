@@ -36,11 +36,13 @@
 
 package com.android.composegeomarker.presentation.screens
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.android.composegeomarker.R
 import com.android.composegeomarker.presentation.GeoMarkerViewModel
+import com.android.composegeomarker.presentation.composables.GeoMarkerButton
 import com.android.composegeomarker.presentation.composables.GeoMarkerTopBar
 import com.android.composegeomarker.presentation.composables.SaveGeoPoint
 import com.google.android.gms.maps.model.CameraPosition
@@ -121,29 +124,6 @@ fun GeoMarkerScreen(
             }
           }
 
-          Button(
-              onClick = {
-                if (drawPolygon) {
-                  drawPolygon = false
-                  areaPoints = mutableListOf()
-                } else {
-                  drawPolygon = true
-                }
-              },
-              modifier = Modifier
-                  .padding(start = 10.dp, end = 10.dp, bottom = 16.dp)
-                  .align(Alignment.BottomCenter),
-              enabled = areaPoints.isNotEmpty() && areaPoints.size > 2
-          ) {
-            Icon(
-                imageVector = if (drawPolygon) Icons.Filled.Refresh else Icons.Filled.Check,
-                contentDescription = "Complete",
-                modifier = Modifier.size(ButtonDefaults.IconSize)
-            )
-            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-            Text(text = if (drawPolygon) "Retry" else "Complete")
-          }
-
           if (showSavePoint) {
             SaveGeoPoint(latLng = clickedLocation) {
               showSavePoint = it.hideSavePointUi
@@ -159,6 +139,19 @@ fun GeoMarkerScreen(
                   textAlign = TextAlign.Center,
                   fontWeight = FontWeight.Bold
               )
+            }
+          }
+
+          GeoMarkerButton(
+              modifier = Modifier
+                  .padding(start = 10.dp, end = 10.dp, bottom = 16.dp)
+                  .align(Alignment.BottomCenter),
+              drawPolygon = drawPolygon,
+              areaPoints = areaPoints
+          ) { drawPolygonCallback ->
+            drawPolygon = drawPolygonCallback
+            if (!drawPolygonCallback) {
+              areaPoints = mutableListOf()
             }
           }
         }
