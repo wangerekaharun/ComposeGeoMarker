@@ -41,23 +41,6 @@
     ]
   },
   {
-    "featureType": "landscape",
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "color": "#3dff64"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "stylers": [
-      {
-        "color": "#ffeb3b"
-      }
-    ]
-  },
-  {
     "featureType": "poi",
     "elementType": "geometry",
     "stylers": [
@@ -116,7 +99,7 @@
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#dadada"
+        "color": "#bdc82d"
       }
     ]
   },
