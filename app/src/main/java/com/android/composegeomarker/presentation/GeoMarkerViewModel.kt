@@ -46,18 +46,7 @@ class GeoMarkerViewModel : ViewModel() {
   private val _currentLatLng = MutableStateFlow(LatLng(0.0, 0.0))
   val currentLatLng: StateFlow<LatLng> get() = _currentLatLng
 
-  private val _areaPoints = MutableStateFlow(emptyList<LatLng>())
-  val areaPoints: StateFlow<List<LatLng>> get() = _areaPoints
-
-
   fun setCurrentLatLng(latLng: LatLng) {
     _currentLatLng.value = latLng
   }
-
-  private fun addFieldPoints() {
-    _areaPoints
-  }
-
-
-
 }
