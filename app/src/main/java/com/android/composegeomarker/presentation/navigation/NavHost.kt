@@ -61,7 +61,6 @@ fun AppNavigation(
     composable(Screens.MapScreen.route) {
       MapsScreen(
           snackbarHostState = snackbarHostState,
-          geoMarkerViewModel = geoMarkerViewModel,
           navController = navController,
           fetchLocationUpdates
       )
