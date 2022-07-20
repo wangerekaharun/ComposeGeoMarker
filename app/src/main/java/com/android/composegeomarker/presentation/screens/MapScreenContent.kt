@@ -43,7 +43,8 @@ import com.android.composegeomarker.presentation.GeoMarkerViewModel
 @Composable
 fun MapScreenContent(
     snackbarHostState: SnackbarHostState,
-    geoMarkerViewModel: GeoMarkerViewModel
+    geoMarkerViewModel: GeoMarkerViewModel,
+    fetchLocationUpdates: () -> Unit
 ) {
   // TODO Add Permissions
 }

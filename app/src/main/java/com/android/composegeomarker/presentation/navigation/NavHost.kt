@@ -51,7 +51,8 @@ import com.android.composegeomarker.presentation.screens.MapsScreen
 fun AppNavigation(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    geoMarkerViewModel: GeoMarkerViewModel
+    geoMarkerViewModel: GeoMarkerViewModel,
+    fetchLocationUpdates: () -> Unit
 ) {
   NavHost(
       navController = navController,
@@ -61,7 +62,8 @@ fun AppNavigation(
       MapsScreen(
           snackbarHostState = snackbarHostState,
           geoMarkerViewModel = geoMarkerViewModel,
-          navController = navController
+          navController = navController,
+          fetchLocationUpdates = fetchLocationUpdates
       )
     }
     composable(Screens.GeoMarkerScreen.route) {
