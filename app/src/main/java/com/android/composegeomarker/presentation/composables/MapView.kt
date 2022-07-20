@@ -37,15 +37,12 @@
 package com.android.composegeomarker.presentation.composables
 
 import android.content.Context
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.android.composegeomarker.R
 import com.google.android.gms.maps.model.CameraPosition
@@ -55,20 +52,13 @@ import com.google.maps.android.compose.*
 
 @Composable
 fun MapView(context: Context, location: LatLng) {
+
   val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(location, 16f)
   }
-  val infoWindowState = rememberMarkerState(position = location)
-  var isMapLoaded by remember { mutableStateOf(false) }
 
-  val mapUiSettings by remember {
-    mutableStateOf(
-        MapUiSettings(
-            myLocationButtonEnabled = true,
-            zoomControlsEnabled = false
-        )
-    )
-  }
+  val infoWindowState = rememberMarkerState(position = location)
+
   val mapProperties by remember {
     mutableStateOf(
         MapProperties(
@@ -77,33 +67,15 @@ fun MapView(context: Context, location: LatLng) {
     )
   }
 
-  AnimatedVisibility(
-      modifier = Modifier
-          .fillMaxSize(),
-      visible = !isMapLoaded,
-      enter = EnterTransition.None,
-      exit = fadeOut()
-  ) {
-    CircularProgressIndicator(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .wrapContentSize()
-    )
-  }
 
   GoogleMap(
       modifier = Modifier.fillMaxSize(),
       cameraPositionState = cameraPositionState,
-      properties = mapProperties,
-      uiSettings = mapUiSettings,
-      onMapLoaded = {
-        isMapLoaded = true
-      }
+      properties = mapProperties
   ) {
     Marker(
         state = MarkerState(position = location),
     )
-
     MarkerInfoWindow(
         state = infoWindowState,
         title = "My location",
@@ -112,7 +84,6 @@ fun MapView(context: Context, location: LatLng) {
           CustomInfoWindow(title = it.title, description = it.snippet)
         }
     )
-
     Circle(
         center = location,
         fillColor = MaterialTheme.colorScheme.secondaryContainer,

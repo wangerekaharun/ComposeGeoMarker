@@ -49,21 +49,26 @@ import com.android.composegeomarker.presentation.composables.MapView
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
+
 @Composable
 fun MapScreenContent(
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
 ) {
+  // 1
   val scope = rememberCoroutineScope()
+  // 2
   val context = LocalContext.current
+  // 3
   var showMap by rememberSaveable {
     mutableStateOf(false)
   }
-
+  // 4
   PermissionDialog(
       context = context,
       permission = Manifest.permission.ACCESS_FINE_LOCATION,
       permissionRationale = stringResource(id = R.string.permission_location_rationale),
       snackbarHostState = snackbarHostState) { permissionAction ->
+    // 5
     when (permissionAction) {
       is PermissionAction.PermissionDenied -> {
         showMap = false
@@ -76,9 +81,9 @@ fun MapScreenContent(
       }
     }
   }
-  val currentLocation = LatLng(1.35, 103.87)
 
-  if (showMap && currentLocation.latitude > 0.00) {
+  val currentLocation = LatLng(1.35, 103.87)
+  if (showMap) {
     MapView(context, currentLocation)
   }
 

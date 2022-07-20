@@ -47,18 +47,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.android.composegeomarker.R
 import com.android.composegeomarker.presentation.GeoMarkerViewModel
 import com.android.composegeomarker.presentation.composables.GeoMarkerButton
 import com.android.composegeomarker.presentation.composables.GeoMarkerTopBar
 import com.android.composegeomarker.presentation.composables.SaveGeoPoint
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 
 @ExperimentalMaterial3Api
@@ -66,7 +63,6 @@ import com.google.maps.android.compose.*
 fun GeoMarkerScreen(
     geoMarkerViewModel: GeoMarkerViewModel
 ) {
-  val context = LocalContext.current
   var areaPoints = mutableListOf<LatLng>()
   var drawPolygon by remember {
     mutableStateOf(false)
@@ -85,13 +81,6 @@ fun GeoMarkerScreen(
   var clickedLocation by remember {
     mutableStateOf(LatLng(0.0, 0.0))
   }
-  val mapProperties by remember {
-    mutableStateOf(
-        MapProperties(
-            mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
-        )
-    )
-  }
 
   Scaffold(
       topBar = { GeoMarkerTopBar() },
@@ -100,28 +89,33 @@ fun GeoMarkerScreen(
           GoogleMap(
               modifier = Modifier.fillMaxSize(),
               cameraPositionState = cameraPositionState,
-              properties = mapProperties,
               onMapClick = {
                 if (!drawPolygon) {
                   showSavePoint = true
                   clickedLocation = it
                 }
+
               }
           ) {
+            // 1
             if (drawPolygon && areaPoints.isNotEmpty()) {
+              // 2
               areaPoints.forEach {
                 Marker(state = MarkerState(position = it))
               }
+
+              // 3
               Polygon(
                   points = areaPoints,
                   fillColor = Color.Blue,
                   strokeColor = Color.Blue
               )
             }
-
+            // 4
             if (showSavePoint) {
               Marker(state = MarkerState(position = clickedLocation))
             }
+
           }
 
           if (showSavePoint) {
@@ -130,7 +124,7 @@ fun GeoMarkerScreen(
               areaPoints.add(it.point)
             }
           } else {
-            if (areaPoints.isEmpty() && areaPoints.size < 2) {
+            if (areaPoints.isEmpty()) {
               Text(
                   modifier = Modifier
                       .fillMaxWidth(),
@@ -141,6 +135,7 @@ fun GeoMarkerScreen(
               )
             }
           }
+
 
           GeoMarkerButton(
               modifier = Modifier
