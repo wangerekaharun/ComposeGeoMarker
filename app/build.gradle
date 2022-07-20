@@ -75,13 +75,13 @@ dependencies {
 
   // Compose Map
   implementation  "com.google.maps.android:maps-compose:2.4.0"
-  implementation 'com.google.android.gms:play-services-maps:18.0.2'
+  implementation 'com.google.android.gms:play-services-maps:18.1.0'
   implementation "com.google.android.gms:play-services-location:20.0.0"
   implementation 'com.google.maps.android:android-maps-utils:2.3.0'
 
   // Coroutines
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3"
 
   // Lifecycle
   implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.0-alpha01"
