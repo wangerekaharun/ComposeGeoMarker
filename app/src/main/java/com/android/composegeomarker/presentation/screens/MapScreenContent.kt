@@ -53,6 +53,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MapScreenContent(
     snackbarHostState: SnackbarHostState,
+    fetchLocationUpdates: () -> Unit
 ) {
   // 1
   val scope = rememberCoroutineScope()
@@ -78,6 +79,7 @@ fun MapScreenContent(
         scope.launch {
           snackbarHostState.showSnackbar("Location permission granted!")
         }
+        fetchLocationUpdates.invoke()
       }
     }
   }
@@ -86,5 +88,4 @@ fun MapScreenContent(
   if (showMap) {
     MapView(context, currentLocation)
   }
-
 }

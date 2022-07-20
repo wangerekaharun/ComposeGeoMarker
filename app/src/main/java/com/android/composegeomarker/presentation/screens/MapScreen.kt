@@ -56,13 +56,14 @@ import com.android.composegeomarker.presentation.navigation.Screens
 fun MapsScreen(
     snackbarHostState: SnackbarHostState,
     geoMarkerViewModel: GeoMarkerViewModel,
-    navController: NavController
+    navController: NavController,
+    fetchLocationUpdates: () -> Unit
 ) {
   Scaffold(
       topBar = { GeoMarkerTopBar() },
       content = { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-          MapScreenContent(snackbarHostState, geoMarkerViewModel)
+          MapScreenContent(snackbarHostState, fetchLocationUpdates)
           SnackbarHost(
               hostState = snackbarHostState,
               modifier = Modifier

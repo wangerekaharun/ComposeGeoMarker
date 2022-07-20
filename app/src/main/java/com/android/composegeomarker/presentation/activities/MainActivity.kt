@@ -68,15 +68,6 @@ class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    lifecycleScope.launch {
-      lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-        fusedLocationClient.locationFlow().collect {
-          it?.let { location ->
-            geoMarkerViewModel.setCurrentLatLng(LatLng(location.latitude, location.longitude))
-          }
-        }
-      }
-    }
     setContent {
       val snackbarHostState = remember { SnackbarHostState() }
       val navController = rememberNavController()
@@ -84,8 +75,21 @@ class MainActivity : ComponentActivity() {
         AppNavigation(
             navController = navController,
             snackbarHostState = snackbarHostState,
-            geoMarkerViewModel = geoMarkerViewModel
+            geoMarkerViewModel = geoMarkerViewModel,
+            this::fetchLocationUpdates
         )
+      }
+    }
+  }
+
+  private fun fetchLocationUpdates() {
+    lifecycleScope.launch {
+      lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        fusedLocationClient.locationFlow().collect {
+          it?.let { location ->
+            geoMarkerViewModel.setCurrentLatLng(LatLng(location.latitude, location.longitude))
+          }
+        }
       }
     }
   }
