@@ -47,7 +47,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.android.composegeomarker.presentation.GeoMarkerViewModel
 import com.android.composegeomarker.presentation.composables.GeoMarkerTopBar
 import com.android.composegeomarker.presentation.navigation.Screens
 
@@ -55,7 +54,6 @@ import com.android.composegeomarker.presentation.navigation.Screens
 @Composable
 fun MapsScreen(
     snackbarHostState: SnackbarHostState,
-    geoMarkerViewModel: GeoMarkerViewModel,
     navController: NavController,
     fetchLocationUpdates: () -> Unit
 ) {
@@ -63,7 +61,7 @@ fun MapsScreen(
       topBar = { GeoMarkerTopBar() },
       content = { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-          MapScreenContent(snackbarHostState, geoMarkerViewModel, fetchLocationUpdates)
+          MapScreenContent(snackbarHostState, fetchLocationUpdates)
           SnackbarHost(
               hostState = snackbarHostState,
               modifier = Modifier

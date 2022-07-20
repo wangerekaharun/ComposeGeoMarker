@@ -38,12 +38,10 @@ package com.android.composegeomarker.presentation.screens
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import com.android.composegeomarker.presentation.GeoMarkerViewModel
 
 @Composable
 fun MapScreenContent(
     snackbarHostState: SnackbarHostState,
-    geoMarkerViewModel: GeoMarkerViewModel,
     fetchLocationUpdates: () -> Unit
 ) {
   // TODO Add Permissions
